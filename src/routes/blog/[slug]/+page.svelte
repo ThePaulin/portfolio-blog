@@ -1,7 +1,28 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+	import { onMount } from 'svelte';
 
-	let { data }: { data: PageData } = $props();
+	let { data }: { data: { post: { html: string } } } = $props();
+
+	onMount(async () => {
+		const { createHighlighter } = await import('shiki');
+		
+		const highlighter = await createHighlighter({
+			themes: ['github-dark'],
+			langs: ['javascript', 'typescript', 'html', 'css', 'svelte', 'json', 'bash', 'python', 'rust', 'go']
+		});
+
+		const codeBlocks = document.querySelectorAll('pre code');
+		codeBlocks.forEach((block) => {
+			const text = block.textContent || '';
+			const langMatch = block.className.match(/language-(\w+)/);
+			const lang = langMatch ? langMatch[1] : 'text';
+			try {
+				block.innerHTML = highlighter.codeToHtml(text, { lang, theme: 'github-dark' });
+			} catch {
+				// Keep original if highlighting fails
+			}
+		});
+	});
 </script>
 
 <svelte:head>

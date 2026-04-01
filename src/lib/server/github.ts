@@ -1,4 +1,5 @@
-import { GITHUB_OWNER, GITHUB_REPO } from '$env/config';
+const GITHUB_OWNER = 'ThePaulin';
+const GITHUB_REPO = 'portfolio-blog';
 
 const GITHUB_API = 'https://api.github.com';
 
